@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+//ajout de assert
+#include <assert.h>
+
 #include "client_service.h"
 #include "client_compression.h"
 
@@ -45,9 +48,14 @@ void client_compression_verifArgs(int argc, char * argv[])
 // Les paramètres sont
 // - le file descriptor du tube de communication vers le service
 // - la chaîne devant être compressée
-static void sendData(/* fd_pipe_to_service,*/ /* chaine_à_envoyer */)
+static void sendData(int fdW, char * chaine)
 {
     // envoi de la chaîne à compresser
+
+    int ret;
+
+    ret = write(fdW, &chaine, sizeof(char *));
+    assert(ret == sizeof(char *));
 }
 
 // ---------------------------------------------
@@ -55,10 +63,16 @@ static void sendData(/* fd_pipe_to_service,*/ /* chaine_à_envoyer */)
 // Les paramètres sont
 // - le file descriptor du tube de communication en provenance du service
 // - autre chose si nécessaire
-static void receiveResult(/* fd_pipe_from_service,*/ /* autres paramètres si nécessaire */)
+static void receiveResult(int fdR/* fd_pipe_from_service,*/ /* autres paramètres si nécessaire */)
 {
     // récupération de la chaîne compressée
+    int ret;
+    char * result;
+    ret = read(fdR, &result, sizeof(char*));
+    assert(ret  == sizeof(char* ));
     // affichage du résultat
+    
+    printf("Le résultat est : %s\n", result);
 }
 
 // ---------------------------------------------
@@ -68,10 +82,10 @@ static void receiveResult(/* fd_pipe_from_service,*/ /* autres paramètres si n�
 // - argc et argv fournis en ligne de commande
 // Cette fonction analyse argv et en déduit les données à envoyer
 //    - argv[2] : la chaîne à compresser
-void client_compression(/* fd des tubes avec le service, */ int argc, char * argv[])
+void client_compression(int fdW, int fdR,/* fd des tubes avec le service, */ int argc, char * argv[])
 {
     // variables locales éventuelles
-    sendData(/* paramètres */);
-    receiveResult(/* paramètres */);
+    sendData(fdW, argv[2]);
+    receiveResult(fdR);
 }
 

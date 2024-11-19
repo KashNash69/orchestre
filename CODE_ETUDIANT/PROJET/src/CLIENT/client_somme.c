@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+//ajout de assert
+#include <assert.h>
+
 #include "client_service.h"
 #include "client_somme.h"
 
@@ -46,9 +49,16 @@ void client_somme_verifArgs(int argc, char * argv[])
 // Les paramètres sont
 // - le file descriptor du tube de communication vers le service
 // - les deux float dont on veut la somme
-static void sendData(/* fd_pipe_to_service,*/ /* entier1, */ /* entier2 */)
+static void sendData(int fdW, int a , int b/* fd_pipe_to_service,*/ /* entier1, */ /* entier2 */)
 {
     // envoi des deux nombres
+    int ret ;
+    
+    ret = write(fdW, &a, sizeof(int));
+    assert(ret == sizeof(int));
+    ret = write(fdW, &b, sizeof(int));
+    assert(ret == sizeof(int));
+    
 }
 
 // ---------------------------------------------
@@ -57,10 +67,19 @@ static void sendData(/* fd_pipe_to_service,*/ /* entier1, */ /* entier2 */)
 // - le file descriptor du tube de communication en provenance du service
 // - le prefixe
 // - autre chose si nécessaire
-static void receiveResult(/* fd_pipe_from_service,*/ /* préfixe, */ /* autres paramètres si nécessaire */)
+static void receiveResult(int fdR, char * prefixe/* fd_pipe_from_service,*/ /* préfixe, */ /* autres paramètres si nécessaire */)
 {
     // récupération de la somme
+    int a,b, ret;
+    
+    ret = write(fdR, &a, sizeof(int));
+    assert(ret == sizeof(int));
+    ret = write(fdR, &b, sizeof(int));
+    assert(ret == sizeof(int));
+    
     // affichage du préfixe et du résultat
+    
+    printf("Le résultat est : %s %d\n", prefixe, a+b);
 }
 
 
@@ -73,10 +92,13 @@ static void receiveResult(/* fd_pipe_from_service,*/ /* préfixe, */ /* autres p
 //    - argv[2] : premier nombre
 //    - argv[3] : deuxième nombre
 //    - argv[4] : chaîne à afficher avant le résultat
-void client_somme(/* fd des tubes avec le service, */ int argc, char * argv[])
+void client_somme(int fdW, int fdR,/* fd des tubes avec le service, */ int argc, char * argv[])
 {
     // variables locales éventuelles
-    sendData(/* paramètres */);
-    receiveResult(/* paramètres */);
+    int a = (int) argv[2];
+    int b = (int) argv[3];
+        
+    sendData(fdW, a, b);
+    receiveResult(fdR, argv[4]);
 }
 
