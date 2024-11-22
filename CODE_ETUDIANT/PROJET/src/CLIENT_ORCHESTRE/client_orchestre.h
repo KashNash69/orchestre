@@ -14,6 +14,6 @@
 
 void creer_tube_sema_client_orchestre();
 
-void init_tube_sema_client();
+void init_tube_client();
 
 #endif
