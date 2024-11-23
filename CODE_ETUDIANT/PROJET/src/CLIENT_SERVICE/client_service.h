@@ -4,21 +4,27 @@
 // Ici toutes les communications entre les services et les clients :
 // - les deux tubes nommés pour la communication bidirectionnelle
 
+#define TUBE_S2C_1 "pipe_s2c_1"
+#define TUBE_C2S_1 "pipe_c2s_1"
 
-int init_client_service();
+#define TUBE_S2C_2 "pipe_s2c_2"
+#define TUBE_C2S_2 "pipe_c2s_2"
 
-//service 1 : somme
-int pipe_s2c_1[2];
-int pipe_c2s_1[2];
+#define TUBE_S2C_3 "pipe_s2c_3"
+#define TUBE_C2S_3 "pipe_c2s_3"
 
-//service 2 : compression
-int pipe_s2c_2[2];
-int pipe_c2s_2[2];
+void creer_tube_service_1(int *pipe1, int * pipe2);
+void creer_tube_service_2(int *pipe1, int * pipe2);
+void creer_tube_service_3(int *pipe1, int * pipe2);
 
-//service 3 : sigma
-int pipe_s2c_3[2];
-int pipe_c2s_3[2];
+void ouvir_tube_client_1(int *pipe1, int * pipe2);
+void ouvir_tube_client_2(int *pipe1, int * pipe2);
+void ouvir_tube_client_3(int *pipe1, int * pipe2);
 
+void close_tube_service_1(int pipe1, int pipe2);
+void close_tube_service_2(int pipe1, int pipe2);
+void close_tube_service_3(int pipe1, int pipe2);
 
+void close_tube_client(int pipe1, int pipe2);
 
 #endif
