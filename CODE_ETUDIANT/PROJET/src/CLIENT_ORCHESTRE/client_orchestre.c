@@ -1,30 +1,79 @@
-#include "myassert.h"
-
 #include "client_orchestre.h"
 #include "myassert.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <sys/types.h>
+//tube
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+//sema
 #include <sys/ipc.h>
 #include <sys/sem.h>
 
 
-int creer_tube_sema_client_orchestre(){
-    int pipe_o2c;
-    int pipe_c2o;
-    int ret;
-
-    ret = pipe(pipe_o2c);
-    myassert((ret == 0), "Erreur pipe tube orchestre to client" ) ;
-
-    ret = pipe(pipe_c2o);
-    myassert((ret == 0), "Erreur pipe tube client to orchestre" ) ;
+void creer_tube_sema_client_orchestre(int * pipe1, int * pipe2, int * sem){
+    int pipe_o2c = mkfifo(TUBE_O2C, 0644);
+    myassert(pipe_o2c == 0, "erreur creation tube orchestre client 1");
+    int pipe_c2o = mkfifo(TUBE_C2O, 0644);
+    myassert(pipe_c2o == 0, "erreur creation tube orchestre client 2");
+ 
+    //OUVERTURE 
+    pipe_o2c = open(TUBE_O2C, O_WRONLY);//orchestre en ecriture
+    myassert(pipe_o2c == 0, "erreur ouverture tube orchestre client 1");
+    pipe_c2o = open(TUBE_C2O, O_RDONLY);//client en lecture
+    myassert(pipe_o2c == 0, "erreur ouverture tube orchestre client 2");
 
     key_t cle = ftok(FILE_CLE,NB_CLE);
     myassert((cle != -1), ("Cle avec l'orchestre erreur")); 
 
-    int sem = semget(cle, 1, IPC_CREAT | IPC_EXCL | 0641);
+    int sema = semget(cle, 1, IPC_CREAT | IPC_EXCL | 0641);
+    myassert(sema != -1, "erreur creation sémaphore orchestre");
 
+    *pipe1 = pipe_o2c;
+    *pipe2 = pipe_c2o;
+    *sem = sema;
+}
+
+void init_tube_client(int * pipe1, int * pipe2, int * sem){
+    //OUVERTURE
+    int pipe_c2o = open(TUBE_C2O, O_WRONLY);//client en ecriture
+    myassert(pipe_c2o == 0, "erreur ouverture tube client orchestre 1");
+    int pipe_o2c = open(TUBE_O2C, O_RDONLY);//orchestre en lecture
+    myassert(pipe_o2c == 0, "erreur ouverture tube client orchestre 2");
+
+    key_t cle = ftok(FILE_CLE,NB_CLE);
+    myassert((cle != -1), ("Cle avec l'orchestre erreur"));
+
+    int sema = semget(cle, 1, 0);
+    myassert(sema != -1, "erreur recupération sémaphore client");
+ 
+    *pipe1 = pipe_o2c; 
+    *pipe2 = pipe_c2o;
+    *sem = sema;
+}
+
+void close_tube_sema_orchestre(int pipe1, int pipe2, int sem){
+    int ret = close(pipe1);
+    myassert((ret ==0 ), ("fermeture tube orchestre client lecture\n"));
+    ret = close(pipe2);
+    myassert((ret ==0 ), ("fermeture tube orchestre client ecriture\n"));
+
+    ret = unlink(TUBE_C2O);
+    myassert((ret ==0 ), ("destruction tube orchestre client lecture\n"));
+    ret = unlink(TUBE_O2C);
+    myassert((ret ==0 ), ("destruction tube orchestre client ecriture\n"));
+
+    //fermer le sémaphore    
+    ret = semctl(sem, -1, IPC_RMID);
+    myassert((ret != -1), ("fermeture semaphore orchestre client\n"));
+
+}
+
+void close_tube_client(int pipe1, int pipe2){
+    int ret = close(pipe1);
+    myassert((ret ==0 ), ("fermeture tube client orchestre ecriture\n"));
+    ret = close(pipe2);
+    myassert((ret ==0 ), ("fermeture tube client orchestre lecture\n"));  
 }
