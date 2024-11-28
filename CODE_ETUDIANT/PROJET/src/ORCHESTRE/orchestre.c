@@ -31,6 +31,11 @@ int main(int argc, char * argv[])
     // - création de 2 tubes nommés pour converser avec les clients
     // - création d'un sémaphore pour que deux clients ne
     //   ne communiquent pas en même temps avec l'orchestre
+    int ret;
+    
+    int tube_o2c,tube_c2o,sem_client;
+    
+    creer_tube_sema_client_orchestre(&tube_o2c, &tube_c2o, &sem_client)
     
     // lancement des services, avec pour chaque service :
     // - création d'un tube anonyme pour converser (orchestre vers service)
@@ -38,12 +43,39 @@ int main(int argc, char * argv[])
     //   fin d'un traitement
     // - création de deux tubes nommés (pour chaque service) pour les
     //   communications entre les clients et les services
+    int tube_s1,tube_s2,tube_s3, sema_s1,sema_s2,sema_s3;
+    creer_tube_sema_orchestre_service(&tube_s1,&tube_s2,&tube_s3, &sema_s1,&sema_s2,&sema_s3);
+    
+    ret = fork();
+    myassert(ret != -1, "fork service 1");
+    //service 1
+    if(ret == 0){
+    	execv(...);;
+    	
+    }
+    ret = fork();
+    myassert(ret != -1, "fork service 2");
+    //service2
+    if(ret == 0){
+    	execv(...);;
+    	
+    }
+    
+    ret = fork();
+    myassert(ret != -1, "fork service 3");
+    //service3
+    if(ret == 0){
+    	execv(...);;
+    	
+    }
+    
+    fermer_tube_lecture(&tube_s1,&tube_s2,&tube_s3);
 
     while (! fin)
     {
         // ouverture ici des tubes nommés avec un client
         // attente d'une demande de service du client
-
+		
         // détecter la fin des traitements lancés précédemment via
         // les sémaphores dédiés (attention on n'attend pas la
         // fin des traitement, on note juste ceux qui sont finis)

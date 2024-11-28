@@ -54,9 +54,9 @@ static void sendData(int fdW, int a , int b/* fd_pipe_to_service,*/ /* entier1, 
     // envoi des deux nombres
     int ret ;
     
-    ret = write(fdW, &a, sizeof(int));
+    ret = fwrite(fdW, &a, sizeof(int));
     assert(ret == sizeof(int));
-    ret = write(fdW, &b, sizeof(int));
+    ret = fwrite(fdW, &b, sizeof(int));
     assert(ret == sizeof(int));
     
 }
@@ -70,16 +70,14 @@ static void sendData(int fdW, int a , int b/* fd_pipe_to_service,*/ /* entier1, 
 static void receiveResult(int fdR, char * prefixe/* fd_pipe_from_service,*/ /* préfixe, */ /* autres paramètres si nécessaire */)
 {
     // récupération de la somme
-    int a,b, ret;
-    
-    ret = write(fdR, &a, sizeof(int));
+    int sum, ret;
+    ret = fread(fdW, &a, sizeof(int));
     assert(ret == sizeof(int));
-    ret = write(fdR, &b, sizeof(int));
-    assert(ret == sizeof(int));
+
     
     // affichage du préfixe et du résultat
     
-    printf("Le résultat est : %s %d\n", prefixe, a+b);
+    printf("Le résultat est : %s %d\n", prefixe, sum);
 }
 
 
@@ -95,8 +93,8 @@ static void receiveResult(int fdR, char * prefixe/* fd_pipe_from_service,*/ /* p
 void client_somme(int fdW, int fdR,/* fd des tubes avec le service, */ int argc, char * argv[])
 {
     // variables locales éventuelles
-    int a = (int) argv[2];
-    int b = (int) argv[3];
+    int a = (int) *argv[2];
+    int b = (int) *argv[3];
         
     sendData(fdW, a, b);
     receiveResult(fdR, argv[4]);
