@@ -30,13 +30,16 @@ static void usage(const char *exeName, const char *message)
  *----------------------------------------------*/
 int main(int argc, char * argv[])
 {
-    if (argc != 6)
+    //initialisations diverses : analyse de argv
+    if (argc != 6) {
         usage(argv[0], "nombre paramètres incorrect");
-
-    // initialisations diverses : analyse de argv
-
-    while (true)
-    {
+    }
+        int num_service = atoi(argv[1]);
+        int cleSemaphore = atoi(argv[2]);
+        int fd_tube_anonyme = atoi(argv[3]);
+        int tube_s2c = atoi(argv[4]);
+        int tube_c2s = atoi(argv[5]);
+    
         // attente d'un code de l'orchestre (via tube anonyme)
         // si code de fin
         //    sortie de la boucle
@@ -58,6 +61,65 @@ int main(int argc, char * argv[])
         //    fermeture ici des deux tubes nommés avec le client
         //    modification du sémaphore pour prévenir l'orchestre de la fin
         // finsi
+
+    while (true) {
+        // Lire un mot de passe depuis le tube anonyme (orchestre -> service)
+        char password_orchestre[128];
+        ssize_t read_ret = read(fd_tube_anonyme, password_orchestre, sizeof(password_orchestre));
+        myassert(read_ret > 0, "Erreur de lecture du tube anonyme");
+        password_orchestre[read_ret] = '\0'; // Null terminate
+
+        // Vérifier si on a reçu le signal d'arrêt
+        if (strcmp(password_orchestre, "END") == 0) {
+            break;
+        }
+
+        // Ouvrir les tubes nommés entre le client et le service
+        ouvrir_tube_service(num_service, &tube_s2c, &tube_c2s);
+
+        // Lire le mot de passe du client
+        char password_client[128];
+        read_ret = read(tube_c2s, password_client, sizeof(password_client));
+        if (read_ret <= 0) {
+            perror("Erreur de lecture du mot de passe client");
+            close_tube_client(pipe_from_client, pipe_to_client);
+            continue;
+        }
+        password_client[read_ret] = '\0';
+
+        // Valider le mot de passe
+        if (strcmp(password_orchestre, password_client) != 0) {
+            // Mot de passe incorrect
+            write(pipe_to_client, "ERROR", strlen("ERROR"));
+        } else {
+            // Mot de passe correct, exécuter le service
+            switch (num_service) {
+            case SERVICE_SOMME:
+                service_somme(pipe_from_client, pipe_to_client);
+                break;
+            case SERVICE_COMPRESSION:
+                service_compression(pipe_from_client, pipe_to_client);
+                break;
+            case SERVICE_SIGMA:
+                service_sigma(pipe_from_client, pipe_to_client);
+                break;
+            default:
+                fprintf(stderr, "Service inconnu\n");
+                break;
+            }
+
+            // Envoyer un code de succès au client
+            write(pipe_to_client, "OK", strlen("OK"));
+        }
+
+        // Fermer les tubes pour le client
+        close_tube_client(pipe_from_client, pipe_to_client);
+
+        // Notifier l'orchestre que le traitement est terminé
+        struct sembuf sem_op = {0, 1, 0}; // Incrémenter le sémaphore
+        if (semop(cle_semaphore, &sem_op, 1) == -1) {
+            perror("Erreur lors de la notification à l'orchestre");
+        }
     }
 
     // libération éventuelle de ressources
