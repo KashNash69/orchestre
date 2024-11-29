@@ -15,9 +15,7 @@
 
 void ouvrir_tube_service(int nb_service, int *pipe1, int * pipe2);
 
-void creer_tube_service_1(int *pipe1, int * pipe2);
-void creer_tube_service_2(int *pipe1, int * pipe2);
-void creer_tube_service_3(int *pipe1, int * pipe2);
+void creer_tube_service(int nb_service,int *pipe1, int * pipe2);
 
 void ouvrir_tube_client(int nb_service, int *pipe1, int * pipe2);
 

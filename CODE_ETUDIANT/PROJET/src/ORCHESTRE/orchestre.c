@@ -43,8 +43,18 @@ int main(int argc, char * argv[])
     //   fin d'un traitement
     // - création de deux tubes nommés (pour chaque service) pour les
     //   communications entre les clients et les services
-    int tube_s1,tube_s2,tube_s3, sema_s1,sema_s2,sema_s3;
+    int tube_s1,tube_s2,tube_s3;
+    int sema_s1,sema_s2,sema_s3;
     creer_tube_sema_orchestre_service(&tube_s1,&tube_s2,&tube_s3, &sema_s1,&sema_s2,&sema_s3);
+    
+    int tube_s2c_1,tube_c2s_1;
+    int tube_s2c_2,tube_c2s_2;
+    int tube_s2c_3,tube_c2s_3;
+    
+    void creer_tube_service(1,&tube_s2c_1,&tube_c2s_1);
+    void creer_tube_service(2,&tube_s2c_2,&tube_c2s_2);
+    void creer_tube_service(3,&tube_s2c_3,&tube_c2s_3);
+    
     
     ret = fork();
     myassert(ret != -1, "fork service 1");
@@ -55,18 +65,25 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "1";
     	argv[2] = "0"
-    	argv[3] = itoa();
-    	argv[4] = ;
-    	argv[5] = ;
+    	argv[3] = itoa(tube_s1);
+    	argv[4] = itoa(tube_s2c_1);
+    	argv[5] = itoa(tube_c2s_1);
     	
-    	execv(...);;
+    	execv(6,argv[]);;
     	
     }
     ret = fork();
     myassert(ret != -1, "fork service 2");
     //service2
     if(ret == 0){
-    	execv(...);;
+    char * argv[6];
+    	argv[0] = "service";
+    	argv[1] = "2";
+    	argv[2] = "0"
+    	argv[3] = itoa(tube_s2);
+    	argv[4] = itoa(tube_s2c_2);
+    	argv[5] = itoa(tube_c2s_2);
+    	execv(6,argv[]);;
     	
     }
     
@@ -74,7 +91,14 @@ int main(int argc, char * argv[])
     myassert(ret != -1, "fork service 3");
     //service3
     if(ret == 0){
-    	execv(...);;
+    char * argv[6];
+    	argv[0] = "service";
+    	argv[1] = "2";
+    	argv[2] = "0"
+    	argv[3] = itoa(tube_s3);
+    	argv[4] = itoa(tube_s2c_3);
+    	argv[5] = itoa(tube_c2s_3);
+    	execv(6,arv[]);;
     	
     }
     
