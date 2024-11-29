@@ -22,6 +22,36 @@ static void receiveData(/* fd_pipe_from_client, */ /* données à récupérer */
 // fonction de traitement des données
 static void computeResult(/* données récupérées, */ /* résultat */)
 {
+	int len = strlen(chaine);
+	int count = 1;
+	int size = 3;
+	char * sortie = (char * ) malloc(size*sizeof(char));
+	char tampon[2];
+	char * inttochar;
+	tampon[0] = chaine[0];
+	tampon[1] = '\0';
+	sortie[0] = '\0';
+	for(int i = 1 ; i < len + 1 ; i++) {
+		if (i < len) {
+			if (chaine[i] == tampon[0]) {
+				count++;
+				}
+			else {
+				inttochar = io_intToStr(count);
+				size = size + 2 + strlen(inttochar);
+				sortie = realloc(sortie,  size * sizeof(char));
+				sortie = strcat(sortie, strcat(inttochar, tampon));
+				count = 1;
+				tampon[0] = chaine[i];
+			}
+		}
+		else {
+			inttochar = io_intToStr(count);
+			size = size + 2 + strlen(inttochar);
+			sortie = realloc(sortie,  size * sizeof(char));
+			sortie = strcat(sortie, strcat(inttochar, tampon));
+	}	
+	return sortie; 	
 }
 
 // fonction d'envoi du résultat

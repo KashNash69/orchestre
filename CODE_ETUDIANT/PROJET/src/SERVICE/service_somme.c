@@ -20,8 +20,8 @@ static void receiveData(/* fd_pipe_from_client, */ /* données à récupérer */
 }
 
 // fonction de traitement des données
-static void computeResult(/* données récupérées, */ /* résultat */)
-{
+static void computeResult(float f1, float f2, float * f3){
+	*f3 = f1 + f2;
 }
 
 // fonction d'envoi du résultat
