@@ -13,17 +13,15 @@
 #define TUBE_S2C_3 "pipe_s2c_3"
 #define TUBE_C2S_3 "pipe_c2s_3"
 
+void ouvrir_tube_service(int nb_service, int *pipe1, int * pipe2);
+
 void creer_tube_service_1(int *pipe1, int * pipe2);
 void creer_tube_service_2(int *pipe1, int * pipe2);
 void creer_tube_service_3(int *pipe1, int * pipe2);
 
-void ouvir_tube_client_1(int *pipe1, int * pipe2);
-void ouvir_tube_client_2(int *pipe1, int * pipe2);
-void ouvir_tube_client_3(int *pipe1, int * pipe2);
+void ouvrir_tube_client(int nb_service, int *pipe1, int * pipe2);
 
-void close_tube_service_1(int pipe1, int pipe2);
-void close_tube_service_2(int pipe1, int pipe2);
-void close_tube_service_3(int pipe1, int pipe2);
+void close_tube_service(int nb_service,int pipe1, int pipe2);
 
 void close_tube_client(int pipe1, int pipe2);
 

@@ -50,6 +50,15 @@ int main(int argc, char * argv[])
     myassert(ret != -1, "fork service 1");
     //service 1
     if(ret == 0){
+    
+    	char * argv[6];
+    	argv[0] = "service";
+    	argv[1] = "1";
+    	argv[2] = "0"
+    	argv[3] = itoa();
+    	argv[4] = ;
+    	argv[5] = ;
+    	
     	execv(...);;
     	
     }

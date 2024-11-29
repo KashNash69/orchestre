@@ -13,20 +13,20 @@
 #include <sys/sem.h>
 
 void fermer_tube_lecture(int * pipe1, int * pipe2, int* pipe3){
-    ret = close(pipe1[0]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
+    ret = close(*pipe1[0]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
     myassert(ret == 0, "fermeture tube 1 ano coté lecture");
-    ret = close(pipe2[0]);//on ferme les extremitées inutiles
+    ret = close(*pipe2[0]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 2 ano coté lecture");
-    ret = close(pipe3[0]);//on ferme les extremitées inutiles
+    ret = close(*pipe3[0]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 3 ano coté lecture");
 }
 
 void fermer_tube_ecriture(int * pipe1, int * pipe2, int* pipe3){
-    ret = close(pipe1[1]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
+    ret = close(*pipe1[1]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
     myassert(ret == 0, "fermeture tube 1 ano coté ecriture");
-    ret = close(pipe2[1]);//on ferme les extremitées inutiles
+    ret = close(*pipe2[1]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 2 ano coté ecriture");
-    ret = close(pipe3[1]);//on ferme les extremitées inutiles
+    ret = close(*pipe3[1]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 3 ano coté ecriture");
 }
 
