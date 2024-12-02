@@ -13,20 +13,20 @@
 #include <sys/sem.h>
 
 void fermer_tube_lecture(int * pipe1, int * pipe2, int* pipe3){
-    ret = close(*pipe1[0]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
+    int ret = close(pipe1[0]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
     myassert(ret == 0, "fermeture tube 1 ano coté lecture");
-    ret = close(*pipe2[0]);//on ferme les extremitées inutiles
+    ret = close(pipe2[0]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 2 ano coté lecture");
-    ret = close(*pipe3[0]);//on ferme les extremitées inutiles
+    ret = close(pipe3[0]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 3 ano coté lecture");
 }
 
 void fermer_tube_ecriture(int * pipe1, int * pipe2, int* pipe3){
-    ret = close(*pipe1[1]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
+    int ret = close(pipe1[1]);//on ferme les extremitées inutiles // peut etre il faut mettre *pipe1 ??
     myassert(ret == 0, "fermeture tube 1 ano coté ecriture");
-    ret = close(*pipe2[1]);//on ferme les extremitées inutiles
+    ret = close(pipe2[1]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 2 ano coté ecriture");
-    ret = close(*pipe3[1]);//on ferme les extremitées inutiles
+    ret = close(pipe3[1]);//on ferme les extremitées inutiles
     myassert(ret == 0, "fermeture tube 3 ano coté ecriture");
 }
 
@@ -71,6 +71,21 @@ void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int *
     *sem1 = sema1;
     *sem2 = sema2;
     *sem3 = sema3;
+}
+
+bool isServiceDispo(int sem){
+    return (sem == 1);
+}
+
+void envoyer(int tube,int taille, char * message){
+    int ret;
+
+    ret = write(tube, taille , sizeof(int));
+    myassert(ret ==  sizeof(int), ("envoie taille %s", message));
+
+    ret = write(tube, message , taille*sizeof(int));
+    myassert(ret == taille * sizeof(int), ("envoie %s",message));
+
 }
 
 //pour l'ochestre il faut fermer chaque tube en lecture ( close(tube[0]))

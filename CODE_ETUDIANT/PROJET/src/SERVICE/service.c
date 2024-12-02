@@ -65,7 +65,7 @@ int main(int argc, char * argv[])
     while (true) {
         // Lire un mot de passe depuis le tube anonyme (orchestre -> service)
         char password_orchestre[128];
-        ssize_t read_ret = read(fd_tube_anonyme, password_orchestre, sizeof(password_orchestre));
+        size_t read_ret = read(fd_tube_anonyme, password_orchestre, sizeof(password_orchestre));
         myassert(read_ret > 0, "Erreur de lecture du tube anonyme");
         password_orchestre[read_ret] = '\0'; // Null terminate
 

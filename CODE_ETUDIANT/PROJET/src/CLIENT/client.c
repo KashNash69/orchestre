@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
         usage(argv[0], "nombre paramètres incorrect");
 
     int numService = io_strToInt(argv[1]);
-    if (numService < -1 || numService >= SERVICE_NB)
+    if (numService < -1 || numService > SERVICE_NB)
         usage(argv[0], "numéro service incorrect");
 
     // appeler la fonction de vérification des arguments

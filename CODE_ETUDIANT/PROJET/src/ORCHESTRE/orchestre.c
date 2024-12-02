@@ -119,7 +119,11 @@ int main(int argc, char * argv[])
         // détecter la fin des traitements lancés précédemment via
         // les sémaphores dédiés (attention on n'attend pas la
         // fin des traitement, on note juste ceux qui sont finis)
+        bool service1dispo, service2dispo,service3dispo;
 
+        service1dispo = isServiceDispo(sema_s1);
+        service2dispo = isServiceDispo(sema_s2);
+        service3dispo = isServiceDispo(sema_s3);
 
 
         // analyse de la demande du client
@@ -139,6 +143,81 @@ int main(int argc, char * argv[])
         //     envoi des noms des tubes nommés au client (via le tube nommé)
         // finsi
 
+        if(numService == -1){
+            ret = write(tube_o2c, 0 , sizeof(int));
+            myassert(ret == sizeof(int), "envoie code fin d'orchestre");
+            fin = !fin;
+        }
+        else if(numService == 0){
+            if(service1dispo){
+                ret = write(tube_o2c, 1 , sizeof(int));
+                myassert(ret == sizeof(int), "envoie code acceptation");
+                
+                char * mdp = "SERVICE1";
+                int lmdp = len(mdp);
+                int lt1 = len(tube_c2s_1);
+                int lt2 = len(tube_s2c_1);
+                //     génération d'un mot de passe
+                //envoie de la taille du mdp et le mdp au service
+                envoyer(tube_s1, lmdp, mdp);
+                //envoie de la taille du mdp et le mdp au client
+                envoyer(tube_o2c, lmdp, mdp);
+                //envoie taille et nom des tubes au client
+                envoyer(tube_o2c, lt1, itoa(tube_c2s_1));
+                envoyer(tube_o2c, lt2, itoa(tube_s2c_1));
+            }
+            else{
+                ret = write(tube_o2c, -1 , sizeof(int));
+                myassert(ret == sizeof(int), "envoie code service indispo");
+            }
+        }
+        else if (numService == 1){
+            if(service2dispo){
+                ret = write(tube_o2c, 1 , sizeof(int));
+                myassert(ret == sizeof(int), "envoie code acceptation");
+                
+                char * mdp = "SERVICE2";
+                int lmdp = len(mdp);
+                int lt1 = len(tube_c2s_2);
+                int lt2 = len(tube_s2c_2);
+                //     génération d'un mot de passe
+                //envoie de la taille du mdp et le mdp au service
+                envoyer(tube_s2, lmdp, mdp);
+                //envoie de la taille du mdp et le mdp au client
+                envoyer(tube_o2c, lmdp, mdp);
+                //envoie taille et nom des tubes au client
+                envoyer(tube_o2c, lt1, itoa(tube_c2s_2));
+                envoyer(tube_o2c, lt2, itoa(tube_s2c_2));      
+            }
+            else{
+                ret = write(tube_o2c, -1 , sizeof(int));
+                myassert(ret == sizeof(int), "envoie code service indispo");
+            }
+        }
+        else if(numService == 2){
+            if(service3dispo){
+                ret = write(tube_o2c, 1 , sizeof(int));
+                myassert(ret == sizeof(int), "envoie code acceptation");
+                
+                char * mdp = "SERVICE3";
+                int lmdp = len(mdp);
+                int lt1 = len(tube_c2s_3);
+                int lt2 = len(tube_s2c_3);
+                //     génération d'un mot de passe
+                //envoie de la taille du mdp et le mdp au service
+                envoyer(tube_s3, lmdp, mdp);
+                //envoie de la taille du mdp et le mdp au client
+                envoyer(tube_o2c, lmdp, mdp);
+                //envoie taille et nom des tubes au client
+                envoyer(tube_o2c, lt1, itoa(tube_c2s_3));
+                envoyer(tube_o2c, lt2, itoa(tube_s2c_3));
+
+            }
+            else{
+                ret = write(tube_o2c, -1 , sizeof(int));
+                myassert(ret == sizeof(int), "envoie code service indispo");
+            }
+        }
         // attente d'un accusé de réception du client
         // fermer les tubes vers le client
 
