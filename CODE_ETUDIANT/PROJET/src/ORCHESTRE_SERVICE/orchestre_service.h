@@ -9,7 +9,7 @@
 #define NB_CLE1 1
 #define NB_CLE2 2
 #define NB_CLE3 3
-#define FILE_CLE "ORCHESTRE_SERVICE/orchestre_service.h"
+#define FILE_CLE_S "ORCHESTRE_SERVICE/orchestre_service.h"
 
 void fermer_tube_lecture(int * pipe1, int * pipe2, int* pipe3);
 
@@ -17,7 +17,7 @@ void fermer_tube_ecriture(int * pipe1, int * pipe2, int* pipe3);
 
 void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int * sem1,int * sem2,int * sem3);
 
-bool isServiceDispo(int sem);
+_Bool isServiceDispo(int sem);
 
 void envoyer(int tube,int taille, char * message);
 

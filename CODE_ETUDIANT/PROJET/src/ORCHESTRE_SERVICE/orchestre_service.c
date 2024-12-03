@@ -43,13 +43,13 @@ void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int *
     myassert(ret == 0, "erreur creation tube orchestre service 3");
     
     
-	key_t cle1 = ftok(FILE_CLE,NB_CLE1);
+	key_t cle1 = ftok(FILE_CLE_S,NB_CLE1);
     myassert((cle1 != -1), ("Cle avec service 1 erreur")); 
 
-	key_t cle2 = ftok(FILE_CLE,NB_CLE2);
+	key_t cle2 = ftok(FILE_CLE_S,NB_CLE2);
     myassert((cle2 != -1), ("Cle avec service 2 erreur")); 
     
-	key_t cle3 = ftok(FILE_CLE,NB_CLE3);
+	key_t cle3 = ftok(FILE_CLE_S,NB_CLE3);
     myassert((cle3 != -1), ("Cle avec service 3 erreur")); 
     
     
@@ -62,7 +62,7 @@ void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int *
     int sema3 = semget(cle3, 1, IPC_CREAT | IPC_EXCL | 0641);
     myassert(sema3 != -1, "erreur creation sémaphore service 3");
     
-	fermer_tube_lecture(&pipe_s1, &pipe_s2, &pipe_s3);
+	fermer_tube_lecture(pipe_s1, pipe_s2, pipe_s3);
     
     *pipe1 = pipe_s1;
     *pipe2 = pipe_s2;
@@ -73,17 +73,17 @@ void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int *
     *sem3 = sema3;
 }
 
-bool isServiceDispo(int sem){
+_Bool isServiceDispo(int sem){  
     return (sem == 1);
 }
 
-void envoyer(int tube,int taille, char * message){
+void envoyer(int tube, int taille, char * message){
     int ret;
 
-    ret = write(tube, taille , sizeof(int));
+    ret = write(tube, &taille , sizeof(int));
     myassert(ret ==  sizeof(int), ("envoie taille %s", message));
 
-    ret = write(tube, message , taille*sizeof(int));
+    ret = write(tube, &message , taille*sizeof(int));
     myassert(ret == taille * sizeof(int), ("envoie %s",message));
 
 }
