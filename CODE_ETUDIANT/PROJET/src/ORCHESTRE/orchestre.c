@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include "config.h"
+#include "client_service.h"
 #include "client_orchestre.h"
 #include "orchestre_service.h"
 #include "service.h"
@@ -66,7 +67,7 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "1";
     	argv[2] = "0";
-    	argv[3] = itoa(tube_s1);
+    	argv[3] = _itoa(tube_s1);
     	argv[4] = itoa(tube_s2c_1);
     	argv[5] = itoa(tube_c2s_1);
     	
@@ -155,8 +156,8 @@ int main(int argc, char * argv[])
                 
                 char * mdp = "SERVICE1";
                 int lmdp = len(mdp);
-                int lt1 = len(tube_c2s_1);
-                int lt2 = len(tube_s2c_1);
+                int lt1 = strlen(itoa(tube_c2s_1));
+                int lt2 = strlen(itoa(tube_s2c_1));
                 //     génération d'un mot de passe
                 //envoie de la taille du mdp et le mdp au service
                 envoyer(tube_s1, lmdp, mdp);
