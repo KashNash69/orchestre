@@ -19,6 +19,6 @@ void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int *
 
 bool isServiceDispo(int sem);
 
-void envoyer(int tube,int taille, char * message)
+void envoyer(int tube,int taille, char * message);
 
 #endif

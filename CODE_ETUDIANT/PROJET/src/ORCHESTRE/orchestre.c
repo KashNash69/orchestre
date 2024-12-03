@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
     	argv[4] = itoa(tube_s2c_1);
     	argv[5] = itoa(tube_c2s_1);
     	
-    	execv(6,argv[]);;
+    	execv(6,argv);;
     	
     }
     ret = fork();
@@ -84,7 +84,7 @@ int main(int argc, char * argv[])
     	argv[3] = itoa(tube_s2);
     	argv[4] = itoa(tube_s2c_2);
     	argv[5] = itoa(tube_c2s_2);
-    	execv(6,argv[]);;
+    	execv(6,argv);;
     	
     }
     
@@ -99,7 +99,7 @@ int main(int argc, char * argv[])
     	argv[3] = itoa(tube_s3);
     	argv[4] = itoa(tube_s2c_3);
     	argv[5] = itoa(tube_c2s_3);
-    	execv(6,argv[]);;
+    	execv(6,argv);;
     	
     }
     
