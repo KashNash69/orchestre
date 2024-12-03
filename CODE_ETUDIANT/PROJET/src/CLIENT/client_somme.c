@@ -4,6 +4,7 @@
 
 //ajout de assert
 #include <assert.h>
+#include <unistd.h>
 
 #include "client_service.h"
 #include "client_somme.h"
@@ -54,9 +55,9 @@ static void sendData(int fdW, int a , int b/* fd_pipe_to_service,*/ /* entier1, 
     // envoi des deux nombres
     int ret ;
     
-    ret = fwrite(fdW, &a, sizeof(int));
+    ret = write(fdW, &a, sizeof(int));
     assert(ret == sizeof(int));
-    ret = fwrite(fdW, &b, sizeof(int));
+    ret = write(fdW, &b, sizeof(int));
     assert(ret == sizeof(int));
     
 }
@@ -71,7 +72,7 @@ static void receiveResult(int fdR, char * prefixe/* fd_pipe_from_service,*/ /* p
 {
     // récupération de la somme
     int sum, ret;
-    ret = fread(fdW, &a, sizeof(int));
+    ret = read(fdR, &sum, sizeof(int));
     assert(ret == sizeof(int));
 
     

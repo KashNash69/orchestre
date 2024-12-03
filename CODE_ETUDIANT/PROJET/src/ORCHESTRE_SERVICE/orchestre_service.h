@@ -17,5 +17,8 @@ void fermer_tube_ecriture(int * pipe1, int * pipe2, int* pipe3);
 
 void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int * sem1,int * sem2,int * sem3);
 
+bool isServiceDispo(int sem);
+
+void envoyer(int tube,int taille, char * message);
 
 #endif

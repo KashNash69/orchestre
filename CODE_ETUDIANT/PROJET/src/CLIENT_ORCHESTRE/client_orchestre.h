@@ -14,10 +14,22 @@
 
 void creer_tube_sema_client_orchestre(int * pipe1, int * pipe2, int * sem);
 
-void init_tube_client(int * pipe1, int * pipe2, int * sem);
+void ouvrir_tube_orchestre(int * pipe1, int * pipe2);
 
-void close_tube_sema_orchestre(int pipe1, int pipe2, int sem);
+void init_tube_client(int * pipe1, int * pipe2);
+
+void init_sem_client(int * sem);
+
+void close_tube_orchestre(int pipe1, int pipe2);
+
+void unlink_tube_orchestre();
+
+void kill_semaphore_orchestre(int sem);
 
 void close_tube_client(int pipe1, int pipe2);
+
+void entrerSC(int * sem);
+
+void sortirSC(int * sem);
 
 #endif

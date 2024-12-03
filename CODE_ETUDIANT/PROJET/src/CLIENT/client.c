@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
 
 #include "io.h"
 #include "memory.h"
@@ -14,6 +17,7 @@
 #include "client_somme.h"
 #include "client_sigma.h"
 #include "client_compression.h"
+
 
 
 static void usage(const char *exeName, const char *message)
@@ -33,7 +37,7 @@ int main(int argc, char * argv[])
         usage(argv[0], "nombre paramètres incorrect");
 
     int numService = io_strToInt(argv[1]);
-    if (numService < -1 || numService >= SERVICE_NB)
+    if (numService < -1 || numService > SERVICE_NB)
         usage(argv[0], "numéro service incorrect");
 
     // appeler la fonction de vérification des arguments
@@ -44,13 +48,26 @@ int main(int argc, char * argv[])
     //         ou . client_sigma_verifArgs
 
     // initialisations diverses s'il y a lieu
+    int pipe_c2o, pipe_o2c, sem,ret;
+
+    init_sem_client(&sem);
 
     // entrée en section critique pour communiquer avec l'orchestre
+
+    entrerSC(&sem);
     
     // ouverture des tubes avec l'orchestre
 
+    init_tube_client(&pipe_o2c, &pipe_c2o);
+
     // envoi à l'orchestre du numéro du service
 
+    ret = write(pipe_c2o,&numService, sizeof(int));
+    myassert(ret == sizeof(int), "erreur envoie numService");
+
+    int code;
+
+    ret = read(pipe_o2c,&code, sizeof(int));
     // attente code de retour
     // si code d'erreur
     //     afficher un message erreur

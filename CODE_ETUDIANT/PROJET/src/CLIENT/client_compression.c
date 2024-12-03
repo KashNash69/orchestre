@@ -4,6 +4,7 @@
 
 //ajout de assert
 #include <assert.h>
+#include <unistd.h>
 
 #include "client_service.h"
 #include "client_compression.h"

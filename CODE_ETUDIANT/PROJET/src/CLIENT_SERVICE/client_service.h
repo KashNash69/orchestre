@@ -1,6 +1,7 @@
 #ifndef CLIENT_SERVICE_H
 #define CLIENT_SERVICE_H
 
+
 // Ici toutes les communications entre les services et les clients :
 // - les deux tubes nommés pour la communication bidirectionnelle
 
@@ -21,6 +22,6 @@ void ouvrir_tube_client(int nb_service, int *pipe1, int * pipe2);
 
 void close_tube_service(int nb_service,int pipe1, int pipe2);
 
-void close_tube_client(int pipe1, int pipe2);
+void close_tube_client_service(int pipe1, int pipe2);
 
 #endif
