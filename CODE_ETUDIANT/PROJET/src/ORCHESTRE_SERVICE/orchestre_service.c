@@ -65,9 +65,9 @@ void creer_tube_sema_orchestre_service(int * pipe1,int * pipe2,int * pipe3,int *
     
 	fermer_tube_lecture(pipe_s1, pipe_s2, pipe_s3);
     
-    *pipe1 = pipe_s1;
-    *pipe2 = pipe_s2;
-    *pipe3 = pipe_s3;
+    pipe1 = pipe_s1;
+    pipe2 = pipe_s2;
+    pipe3 = pipe_s3;
 
     *sem1 = sema1;
     *sem2 = sema2;
@@ -89,24 +89,6 @@ void envoyer(int tube, int taille, char * message){
 
 }
 
-char* int_to_string(int num) {
-    // Calculer le nombre de chiffres nécessaires
-    int num_digits = (num == 0) ? 1 : (int)log10(abs(num)) + 1;
-    if (num < 0) num_digits++; // Ajouter un espace pour le signe négatif
-    num_digits++; // Ajouter un espace pour le caractère null '\0'
-
-    // Allouer dynamiquement le buffer
-    char* buffer = (char*)malloc(num_digits * sizeof(char));
-    if (buffer == NULL) {
-        perror("Erreur d'allocation mémoire");
-        exit(EXIT_FAILURE);
-    }
-
-    // Utiliser sprintf pour convertir le nombre
-    sprintf(buffer, "%d", num);
-
-    return buffer;
-}
 
 //pour l'ochestre il faut fermer chaque tube en lecture ( close(tube[0]))
 //pour chaque service( fils de l'ochestre + exec) il faut fermer en écriture close((tube[1]))

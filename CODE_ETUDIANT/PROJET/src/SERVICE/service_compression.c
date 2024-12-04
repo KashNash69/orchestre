@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include "io.h"
+//tube
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+//sema
+#include <sys/ipc.h>
+#include <sys/sem.h>
 
 #include "orchestre_service.h"
 #include "client_service.h"
@@ -20,7 +30,7 @@ static void receiveData(/* fd_pipe_from_client, */ /* données à récupérer */
 }
 
 // fonction de traitement des données
-static void computeResult(/* données récupérées, */ /* résultat */)
+static void computeResult(char * chaine/* données récupérées, */ /* résultat */)
 {
 	int len = strlen(chaine);
 	int count = 1;

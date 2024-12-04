@@ -21,30 +21,30 @@ void ouvrir_tube_service(int nb_service, int *pipe1, int * pipe2){
     switch(nb_service){
     	case 0 :
 			pipe_s2c = open(TUBE_S2C_1, O_WRONLY);//service en ecriture
-			myassert(pipe_s2c == 0, "erreur ouverture tube service 1 client 1");
+			myassert(pipe_s2c != -1, "erreur ouverture tube service 1 client 1");
 			pipe_c2s = open(TUBE_C2S_1, O_RDONLY);//client en lecture
-			myassert(pipe_c2s == 0, "erreur ouverture tube service 1 client 2");
+			myassert(pipe_c2s != -1, "erreur ouverture tube service 1 client 2");
 			break;
     
     	case 1 : 
 			pipe_s2c = open(TUBE_S2C_2, O_WRONLY);//service en ecriture
-			myassert(pipe_s2c == 0, "erreur ouverture tube service 2 client 1");
+			myassert(pipe_s2c != -1, "erreur ouverture tube service 2 client 1");
 			pipe_c2s = open(TUBE_C2S_2, O_RDONLY);//client en lecture
-			myassert(pipe_c2s == 0, "erreur ouverture tube service 2 client 2");
+			myassert(pipe_c2s != -1, "erreur ouverture tube service 2 client 2");
 			break;
 
     	case 2 : 
 			pipe_s2c = open(TUBE_S2C_3, O_WRONLY);//service en ecriture
-			myassert(pipe_s2c == 0, "erreur ouverture tube service 3 client 1");
+			myassert(pipe_s2c != -1, "erreur ouverture tube service 3 client 1");
 			pipe_c2s = open(TUBE_C2S_3, O_RDONLY);//client en lecture
-			myassert(pipe_c2s == 0, "erreur ouverture tube service 3 client 2");
+			myassert(pipe_c2s != -1, "erreur ouverture tube service 3 client 2");
 			break;
     }	
    	*pipe1 = pipe_s2c;
 	*pipe2 = pipe_c2s;
 }
 
-void creer_tube_service(int nb_service,int *pipe1, int * pipe2){
+void creer_tube_service(int nb_service){
 	myassert(nb_service < 3 && nb_service > -1, "erreur ouvrir tube mauvais nb service");
 
 	int pipe_s2c, pipe_c2s;
@@ -69,8 +69,6 @@ void creer_tube_service(int nb_service,int *pipe1, int * pipe2){
 			myassert(pipe_c2s == 0, "erreur creation tube service 2 client 2");
 			break;
 	}
-	*pipe1 = pipe_s2c;
-    *pipe2 = pipe_c2s;
  	
 }
 
@@ -83,21 +81,21 @@ void ouvrir_tube_client(int nb_service, int *pipe1, int * pipe2){
 	switch(nb_service){
 		case 0 : 
 			pipe_s2c = open(TUBE_S2C_1, O_RDONLY);//service en lecture
-			myassert(pipe_s2c == 0, "erreur ouverture tube client service 1 1");
+			myassert(pipe_s2c != -1, "erreur ouverture tube client service 1 1");
 			pipe_c2s = open(TUBE_C2S_1, O_WRONLY);//client en ecriture
-			myassert(pipe_c2s == 0, "erreur ouverture tube  client service 1 2");
+			myassert(pipe_c2s != -1, "erreur ouverture tube  client service 1 2");
 			break;
 		case 1 :
 			pipe_s2c = open(TUBE_S2C_2, O_RDONLY);//service en lecture
-			myassert(pipe_s2c == 0, "erreur ouverture tube client service 2 1");
+			myassert(pipe_s2c != -1, "erreur ouverture tube client service 2 1");
 			pipe_c2s = open(TUBE_C2S_2, O_WRONLY);//client en ecriture
-			myassert(pipe_c2s == 0, "erreur ouverture tube client service 2 2");
+			myassert(pipe_c2s != -1, "erreur ouverture tube client service 2 2");
 			break;
 		case 2 :
 			pipe_s2c = open(TUBE_S2C_3, O_RDONLY);//service en lecture
-			myassert(pipe_s2c == 0, "erreur ouverture tube client service 3 1");
+			myassert(pipe_s2c != -1, "erreur ouverture tube client service 3 1");
 			pipe_c2s = open(TUBE_C2S_3, O_WRONLY);//client en ecriture
-			myassert(pipe_c2s == 0, "erreur ouverture tube client service 3 2");
+			myassert(pipe_c2s != -1, "erreur ouverture tube client service 3 2");
 			break;
 	}
 	*pipe2 = pipe_s2c;

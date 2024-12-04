@@ -18,6 +18,7 @@
 #include "client_orchestre.h"
 #include "orchestre_service.h"
 #include "service.h"
+#include "io.h"
 
 
 static void usage(const char *exeName, const char *message)
@@ -59,13 +60,9 @@ int main(int argc, char * argv[])
     int sema_s1,sema_s2,sema_s3;
     creer_tube_sema_orchestre_service(&tube_s1,&tube_s2,&tube_s3, &sema_s1,&sema_s2,&sema_s3);
     
-    int tube_s2c_1,tube_c2s_1;
-    int tube_s2c_2,tube_c2s_2;
-    int tube_s2c_3,tube_c2s_3;
-    
-    creer_tube_service(0,&tube_s2c_1,&tube_c2s_1);
-    creer_tube_service(1,&tube_s2c_2,&tube_c2s_2);
-    creer_tube_service(2,&tube_s2c_3,&tube_c2s_3);
+    creer_tube_service(0);
+    creer_tube_service(1);
+    creer_tube_service(2);
     
     
     ret = fork();
@@ -77,9 +74,9 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "1";
     	argv[2] = "0";
-    	argv[3] = int_to_string(tube_s1);
-    	argv[4] = int_to_string(tube_s2c_1);
-    	argv[5] = int_to_string(tube_c2s_1);
+    	argv[3] = io_intToStr(tube_s1);
+    	argv[4] = TUBE_S2C_1;
+    	argv[5] = TUBE_C2S_1;
     	
     	execv("service",argv);;
     	
@@ -92,9 +89,9 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "2";
     	argv[2] = "0";
-    	argv[3] = int_to_string(tube_s2);
-    	argv[4] = int_to_string(tube_s2c_2);
-    	argv[5] = int_to_string(tube_c2s_2);
+    	argv[3] = io_intToStr(tube_s2);
+    	argv[4] = TUBE_S2C_2;
+    	argv[5] = TUBE_C2S_2;
     	execv("service",argv);;
     	
     }
@@ -107,9 +104,9 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "2";
     	argv[2] = "0";
-    	argv[3] = int_to_string(tube_s3);
-    	argv[4] = int_to_string(tube_s2c_3);
-    	argv[5] = int_to_string(tube_c2s_3);
+    	argv[3] = io_intToStr(tube_s3);
+    	argv[4] = TUBE_S2C_3;
+    	argv[5] = TUBE_C2S_3;
     	execv("service",argv);;
     	
     }
@@ -166,16 +163,16 @@ int main(int argc, char * argv[])
                 
                 char * mdp = "SERVICE1";
                 int lmdp = strlen(mdp);
-                int lt1 = strlen(int_to_string(tube_c2s_1));
-                int lt2 = strlen(int_to_string(tube_s2c_1));
+                int lt1 = strlen(TUBE_S2C_1);
+                int lt2 = strlen(TUBE_C2S_1);
                 //     génération d'un mot de passe
                 //envoie de la taille du mdp et le mdp au service
                 envoyer(tube_s1, lmdp, mdp);
                 //envoie de la taille du mdp et le mdp au client
                 envoyer(tube_o2c, lmdp, mdp);
                 //envoie taille et nom des tubes au client
-                envoyer(tube_o2c, lt1, int_to_string(tube_c2s_1));
-                envoyer(tube_o2c, lt2, int_to_string(tube_s2c_1));
+                envoyer(tube_o2c, lt1, TUBE_S2C_1);
+                envoyer(tube_o2c, lt2, TUBE_C2S_1);
             }
             else{
                 ret = write(tube_o2c, "-1" , sizeof(int));
@@ -189,16 +186,16 @@ int main(int argc, char * argv[])
                 
                 char * mdp = "SERVICE2";
                 int lmdp = strlen(mdp);
-                int lt1 = strlen(int_to_string(tube_c2s_2));
-                int lt2 = strlen(int_to_string(tube_s2c_2));
+                int lt1 = strlen(TUBE_S2C_1);
+                int lt2 = strlen(TUBE_C2S_2);
                 //     génération d'un mot de passe
                 //envoie de la taille du mdp et le mdp au service
                 envoyer(tube_s2, lmdp, mdp);
                 //envoie de la taille du mdp et le mdp au client
                 envoyer(tube_o2c, lmdp, mdp);
                 //envoie taille et nom des tubes au client
-                envoyer(tube_o2c, lt1, int_to_string(tube_c2s_2));
-                envoyer(tube_o2c, lt2, int_to_string(tube_s2c_2));      
+                envoyer(tube_o2c, lt1, TUBE_S2C_1);
+                envoyer(tube_o2c, lt2, TUBE_C2S_2);      
             }
             else{
                 ret = write(tube_o2c, "-1" , sizeof(int));
@@ -212,16 +209,16 @@ int main(int argc, char * argv[])
                 
                 char * mdp = "SERVICE3";
                 int lmdp = strlen(mdp);
-                int lt1 = strlen(int_to_string(tube_c2s_3));
-                int lt2 = strlen(int_to_string(tube_s2c_3));
+                int lt1 = strlen(TUBE_S2C_1);
+                int lt2 = strlen(TUBE_C2S_3);
                 //     génération d'un mot de passe
                 //envoie de la taille du mdp et le mdp au service
                 envoyer(tube_s3, lmdp, mdp);
                 //envoie de la taille du mdp et le mdp au client
                 envoyer(tube_o2c, lmdp, mdp);
                 //envoie taille et nom des tubes au client
-                envoyer(tube_o2c, lt1, int_to_string(tube_c2s_3));
-                envoyer(tube_o2c, lt2, int_to_string(tube_s2c_3));
+                envoyer(tube_o2c, lt1, TUBE_S2C_1);
+                envoyer(tube_o2c, lt2, TUBE_C2S_3);
 
             }
             else{

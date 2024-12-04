@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include "myassert.h"
+//tube
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+//sema
+#include <sys/ipc.h>
+#include <sys/sem.h>
 
 #include "orchestre_service.h"
 #include "client_service.h"
@@ -82,7 +92,7 @@ int main(int argc, char * argv[])
         read_ret = read(tube_c2s, password_client, sizeof(password_client));
         if (read_ret <= 0) {
             perror("Erreur de lecture du mot de passe client");
-            close_tube_client(pipe_from_client, pipe_to_client);
+            close_tube_client_service(tube_c2s, tube_s2c);
             continue;
         }
         password_client[read_ret] = '\0';
@@ -90,18 +100,18 @@ int main(int argc, char * argv[])
         // Valider le mot de passe
         if (strcmp(password_orchestre, password_client) != 0) {
             // Mot de passe incorrect
-            write(pipe_to_client, "ERROR", strlen("ERROR"));
+            write(tube_s2c, "ERROR", strlen("ERROR"));
         } else {
             // Mot de passe correct, exécuter le service
             switch (num_service) {
             case SERVICE_SOMME:
-                service_somme(pipe_from_client, pipe_to_client);
+                service_somme(tube_c2s, tube_s2c);
                 break;
             case SERVICE_COMPRESSION:
-                service_compression(pipe_from_client, pipe_to_client);
+                service_compression(tube_c2s, tube_s2c);
                 break;
             case SERVICE_SIGMA:
-                service_sigma(pipe_from_client, pipe_to_client);
+                service_sigma(tube_c2s, tube_s2c);
                 break;
             default:
                 fprintf(stderr, "Service inconnu\n");
@@ -109,15 +119,15 @@ int main(int argc, char * argv[])
             }
 
             // Envoyer un code de succès au client
-            write(pipe_to_client, "OK", strlen("OK"));
+            write(tube_s2c, "OK", strlen("OK"));
         }
 
         // Fermer les tubes pour le client
-        close_tube_client(pipe_from_client, pipe_to_client);
+        close_tube_client(tube_c2s, tube_s2c);
 
         // Notifier l'orchestre que le traitement est terminé
         struct sembuf sem_op = {0, 1, 0}; // Incrémenter le sémaphore
-        myassert(semop(clesemaphore, &sem_op, 1) == -1, "Erreur lors de la notification à l'orchestre")
+        myassert((semop(NB_CLE1, &sem_op, 1) == -1), "Erreur lors de la notification à l'orchestre");
     }
 
     // libération éventuelle de ressources
