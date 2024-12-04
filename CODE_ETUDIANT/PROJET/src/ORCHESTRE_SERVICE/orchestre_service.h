@@ -21,4 +21,6 @@ _Bool isServiceDispo(int sem);
 
 void envoyer(int tube,int taille, char * message);
 
+char* int_to_string(int num);
+
 #endif

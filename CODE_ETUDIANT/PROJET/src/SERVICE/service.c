@@ -117,7 +117,7 @@ int main(int argc, char * argv[])
 
         // Notifier l'orchestre que le traitement est terminé
         struct sembuf sem_op = {0, 1, 0}; // Incrémenter le sémaphore
-        myassert(semop(cle_semaphore, &sem_op, 1) == -1, "Erreur lors de la notification à l'orchestre")
+        myassert(semop(clesemaphore, &sem_op, 1) == -1, "Erreur lors de la notification à l'orchestre")
     }
 
     // libération éventuelle de ressources

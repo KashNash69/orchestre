@@ -38,7 +38,7 @@ void service_somme(/* fd tubes nommés avec un client */)
     // initialisations diverses
     
     receiveData(/* paramètres */);
-    computeResult(/* paramètres */);
+    //computeResult(/* paramètres */);
     sendResult(/* paramètres */);
 
     // libération éventuelle de ressources

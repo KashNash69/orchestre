@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 //tube
 #include <unistd.h>
 #include <sys/types.h>
@@ -86,6 +87,25 @@ void envoyer(int tube, int taille, char * message){
     ret = write(tube, &message , taille*sizeof(int));
     myassert(ret == taille * sizeof(int), ("envoie %s",message));
 
+}
+
+char* int_to_string(int num) {
+    // Calculer le nombre de chiffres nécessaires
+    int num_digits = (num == 0) ? 1 : (int)log10(abs(num)) + 1;
+    if (num < 0) num_digits++; // Ajouter un espace pour le signe négatif
+    num_digits++; // Ajouter un espace pour le caractère null '\0'
+
+    // Allouer dynamiquement le buffer
+    char* buffer = (char*)malloc(num_digits * sizeof(char));
+    if (buffer == NULL) {
+        perror("Erreur d'allocation mémoire");
+        exit(EXIT_FAILURE);
+    }
+
+    // Utiliser sprintf pour convertir le nombre
+    sprintf(buffer, "%d", num);
+
+    return buffer;
 }
 
 //pour l'ochestre il faut fermer chaque tube en lecture ( close(tube[0]))

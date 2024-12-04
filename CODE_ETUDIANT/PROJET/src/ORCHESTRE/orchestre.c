@@ -1,10 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include "myassert.h"
+#include <sys/wait.h>
+//tube
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+//sema
+#include <sys/ipc.h>
+#include <sys/sem.h>
 
 #include "config.h"
-#include "client_service.h"
+#include "../CLIENT_SERVICE/client_service.h"
 #include "client_orchestre.h"
 #include "orchestre_service.h"
 #include "service.h"
@@ -67,11 +77,11 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "1";
     	argv[2] = "0";
-    	argv[3] = _itoa(tube_s1);
-    	argv[4] = itoa(tube_s2c_1);
-    	argv[5] = itoa(tube_c2s_1);
+    	argv[3] = int_to_string(tube_s1);
+    	argv[4] = int_to_string(tube_s2c_1);
+    	argv[5] = int_to_string(tube_c2s_1);
     	
-    	execv(6,argv);;
+    	execv("service",argv);;
     	
     }
     ret = fork();
@@ -82,10 +92,10 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "2";
     	argv[2] = "0";
-    	argv[3] = itoa(tube_s2);
-    	argv[4] = itoa(tube_s2c_2);
-    	argv[5] = itoa(tube_c2s_2);
-    	execv(6,argv);;
+    	argv[3] = int_to_string(tube_s2);
+    	argv[4] = int_to_string(tube_s2c_2);
+    	argv[5] = int_to_string(tube_c2s_2);
+    	execv("service",argv);;
     	
     }
     
@@ -97,10 +107,10 @@ int main(int argc, char * argv[])
     	argv[0] = "service";
     	argv[1] = "2";
     	argv[2] = "0";
-    	argv[3] = itoa(tube_s3);
-    	argv[4] = itoa(tube_s2c_3);
-    	argv[5] = itoa(tube_c2s_3);
-    	execv(6,argv);;
+    	argv[3] = int_to_string(tube_s3);
+    	argv[4] = int_to_string(tube_s2c_3);
+    	argv[5] = int_to_string(tube_c2s_3);
+    	execv("service",argv);;
     	
     }
     
@@ -145,77 +155,77 @@ int main(int argc, char * argv[])
         // finsi
 
         if(numService == -1){
-            ret = write(tube_o2c, 0 , sizeof(int));
+            ret = write(tube_o2c, "0" , sizeof(int));
             myassert(ret == sizeof(int), "envoie code fin d'orchestre");
             fin = !fin;
         }
         else if(numService == 0){
             if(service1dispo){
-                ret = write(tube_o2c, 1 , sizeof(int));
+                ret = write(tube_o2c, "1" , sizeof(int));
                 myassert(ret == sizeof(int), "envoie code acceptation");
                 
                 char * mdp = "SERVICE1";
-                int lmdp = len(mdp);
-                int lt1 = strlen(itoa(tube_c2s_1));
-                int lt2 = strlen(itoa(tube_s2c_1));
+                int lmdp = strlen(mdp);
+                int lt1 = strlen(int_to_string(tube_c2s_1));
+                int lt2 = strlen(int_to_string(tube_s2c_1));
                 //     génération d'un mot de passe
                 //envoie de la taille du mdp et le mdp au service
                 envoyer(tube_s1, lmdp, mdp);
                 //envoie de la taille du mdp et le mdp au client
                 envoyer(tube_o2c, lmdp, mdp);
                 //envoie taille et nom des tubes au client
-                envoyer(tube_o2c, lt1, itoa(tube_c2s_1));
-                envoyer(tube_o2c, lt2, itoa(tube_s2c_1));
+                envoyer(tube_o2c, lt1, int_to_string(tube_c2s_1));
+                envoyer(tube_o2c, lt2, int_to_string(tube_s2c_1));
             }
             else{
-                ret = write(tube_o2c, -1 , sizeof(int));
+                ret = write(tube_o2c, "-1" , sizeof(int));
                 myassert(ret == sizeof(int), "envoie code service indispo");
             }
         }
         else if (numService == 1){
             if(service2dispo){
-                ret = write(tube_o2c, 1 , sizeof(int));
+                ret = write(tube_o2c, "1" , sizeof(int));
                 myassert(ret == sizeof(int), "envoie code acceptation");
                 
                 char * mdp = "SERVICE2";
-                int lmdp = len(mdp);
-                int lt1 = len(tube_c2s_2);
-                int lt2 = len(tube_s2c_2);
+                int lmdp = strlen(mdp);
+                int lt1 = strlen(int_to_string(tube_c2s_2));
+                int lt2 = strlen(int_to_string(tube_s2c_2));
                 //     génération d'un mot de passe
                 //envoie de la taille du mdp et le mdp au service
                 envoyer(tube_s2, lmdp, mdp);
                 //envoie de la taille du mdp et le mdp au client
                 envoyer(tube_o2c, lmdp, mdp);
                 //envoie taille et nom des tubes au client
-                envoyer(tube_o2c, lt1, itoa(tube_c2s_2));
-                envoyer(tube_o2c, lt2, itoa(tube_s2c_2));      
+                envoyer(tube_o2c, lt1, int_to_string(tube_c2s_2));
+                envoyer(tube_o2c, lt2, int_to_string(tube_s2c_2));      
             }
             else{
-                ret = write(tube_o2c, -1 , sizeof(int));
+                ret = write(tube_o2c, "-1" , sizeof(int));
                 myassert(ret == sizeof(int), "envoie code service indispo");
             }
         }
         else if(numService == 2){
             if(service3dispo){
-                ret = write(tube_o2c, 1 , sizeof(int));
+                ret = write(tube_o2c,"1" , sizeof(int));
                 myassert(ret == sizeof(int), "envoie code acceptation");
                 
                 char * mdp = "SERVICE3";
-                int lmdp = len(mdp);
-                int lt1 = len(tube_c2s_3);
-                int lt2 = len(tube_s2c_3);
+                int lmdp = strlen(mdp);
+                int lt1 = strlen(int_to_string(tube_c2s_3));
+                int lt2 = strlen(int_to_string(tube_s2c_3));
                 //     génération d'un mot de passe
                 //envoie de la taille du mdp et le mdp au service
                 envoyer(tube_s3, lmdp, mdp);
                 //envoie de la taille du mdp et le mdp au client
                 envoyer(tube_o2c, lmdp, mdp);
                 //envoie taille et nom des tubes au client
-                envoyer(tube_o2c, lt1, itoa(tube_c2s_3));
-                envoyer(tube_o2c, lt2, itoa(tube_s2c_3));
+                envoyer(tube_o2c, lt1, int_to_string(tube_c2s_3));
+                envoyer(tube_o2c, lt2, int_to_string(tube_s2c_3));
 
             }
             else{
-                ret = write(tube_o2c, -1 , sizeof(int));
+                ret = write(tube_o2c, "-1" , sizeof(int));
                 myassert(ret == sizeof(int), "envoie code service indispo");
             }
         }
