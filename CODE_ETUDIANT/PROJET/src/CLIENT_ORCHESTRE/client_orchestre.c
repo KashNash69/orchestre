@@ -13,9 +13,9 @@
 #include <sys/sem.h>
 
 
-void creer_tube_sema_client_orchestre(int * pipe1, int * pipe2, int * sem){
+void creer_tube_sema_client_orchestre(int * sem){
     int pipe_o2c = mkfifo(TUBE_O2C, 0644);
-    myassert(pipe_o2c == 0, "erreur creation tube orchestre client 1");
+    myassert(pipe_o2c != -1, "erreur creation tube orchestre client 1");
     int pipe_c2o = mkfifo(TUBE_C2O, 0644);
     myassert(pipe_c2o == 0, "erreur creation tube orchestre client 2");
  
@@ -23,10 +23,10 @@ void creer_tube_sema_client_orchestre(int * pipe1, int * pipe2, int * sem){
     myassert((cle != -1), ("Cle avec l'orchestre erreur")); 
 
     int sema = semget(cle, 1, IPC_CREAT | IPC_EXCL | 0641);
+    
     myassert(sema != -1, "erreur creation sémaphore orchestre");
+    sema = semctl(sema,0,SETVAL);
 
-    *pipe1 = pipe_o2c;
-    *pipe2 = pipe_c2o;
     *sem = sema;
 }
 

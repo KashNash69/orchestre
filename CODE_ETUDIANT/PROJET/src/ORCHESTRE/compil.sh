@@ -10,6 +10,7 @@ includeDirectories="-I. \
                     -I../UTILS \
                     -I../CONFIG \
                     -I../SERVICE \
+                    -I../CLIENT_SERVICE \
                     -I../CLIENT_ORCHESTRE \
                     -I../ORCHESTRE_SERVICE"
 
@@ -29,6 +30,7 @@ cextraflags="-g"
 commun="../UTILS/myassert.c \
         ../UTILS/io.c \
         ../CONFIG/config.c \
+        ../CLIENT_SERVICE/client_service.c \
         ../CLIENT_ORCHESTRE/client_orchestre.c \
         ../ORCHESTRE_SERVICE/orchestre_service.c"
 

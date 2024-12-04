@@ -12,7 +12,7 @@
 #define TUBE_O2C "pipe_o2c"
 #define TUBE_C2O "pipe_c2o"
 
-void creer_tube_sema_client_orchestre(int * pipe1, int * pipe2, int * sem);
+void creer_tube_sema_client_orchestre(int * sem);
 
 void ouvrir_tube_orchestre(int * pipe1, int * pipe2);
 

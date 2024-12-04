@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
     
     int tube_o2c,tube_c2o,sem_client;
     
-    creer_tube_sema_client_orchestre(&tube_o2c, &tube_c2o, &sem_client);
+    creer_tube_sema_client_orchestre(&sem_client);
     
     // lancement des services, avec pour chaque service :
     // - création d'un tube anonyme pour converser (orchestre vers service)

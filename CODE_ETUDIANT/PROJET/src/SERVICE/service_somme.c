@@ -20,8 +20,8 @@ static void receiveData(/* fd_pipe_from_client, */ /* données à récupérer */
 }
 
 // fonction de traitement des données
-static void computeResult(float f1, float f2, float * f3){
-	*f3 = f1 + f2;
+static void computeResult(/* données récupérées, */ /* résultat */)
+{
 }
 
 // fonction d'envoi du résultat
@@ -38,7 +38,7 @@ void service_somme(/* fd tubes nommés avec un client */)
     // initialisations diverses
     
     receiveData(/* paramètres */);
-    //computeResult(/* paramètres */);
+    computeResult(/* paramètres */);
     sendResult(/* paramètres */);
 
     // libération éventuelle de ressources

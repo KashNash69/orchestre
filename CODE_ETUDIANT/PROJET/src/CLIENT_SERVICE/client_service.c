@@ -63,9 +63,9 @@ void creer_tube_service(int nb_service){
 			myassert(pipe_c2s == 0, "erreur creation tube service 2 client 2");
 			break;
 		case 2:
-			pipe_s2c = mkfifo(TUBE_S2C_2, 0644);
+			pipe_s2c = mkfifo(TUBE_S2C_3, 0644);
 			myassert(pipe_s2c == 0, "erreur creation tube service 2 client 1");
-			pipe_c2s = mkfifo(TUBE_C2S_2, 0644);
+			pipe_c2s = mkfifo(TUBE_C2S_3, 0644);
 			myassert(pipe_c2s == 0, "erreur creation tube service 2 client 2");
 			break;
 	}
